@@ -1,7 +1,0 @@
-open container: docker-compose run --rm app /bin/bash
-
-
-new_app container > psql -U postgres -h legacy_app_db_1 -p 5432 legacy_app_development
-
-
-docker network ls

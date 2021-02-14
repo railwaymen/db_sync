@@ -1,0 +1,15 @@
+default: &default
+  adapter: postgresql
+  encoding: unicode
+  host: legacy_db
+  username: postgres
+  password: password
+  pool: 5
+
+development:
+  <<: *default
+  database: legacy_app_development
+
+test:
+  <<: *default
+  database: legacy_app_test
