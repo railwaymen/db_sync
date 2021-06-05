@@ -16,11 +16,46 @@ namespace :db_connection do
     end
   end
 
-  namespace :legacy_products do
-    task drop_foreign_table: :environment do
-      execute_sql "DROP FOREIGN TABLE legacy_products;"
+  namespace :products_sequence do
+    task create_products_id_seq_view: :environment do
+      execute_sql "CREATE VIEW products_id_seq_view AS SELECT nextval('products_id_seq') as next_id;"
     end
 
+    task drop_products_id_seq_view: :environment do
+      execute_sql "DROP VIEW products_id_seq_view;"
+    end
+  end
+
+  namespace :legacy_products_sequence do
+    task create_foreign_products_id_sequence: :environment do
+      execute_sql "
+        CREATE FOREIGN TABLE foreign_products_id_seq (next_id bigint)
+        server legacy
+        OPTIONS (table_name 'products_id_seq_view');
+      "
+    end
+
+    task drop_foreign_products_id_sequence: :environment do
+      execute_sql "DROP FOREIGN TABLE foreign_products_id_seq;"
+    end
+
+    task create_or_update_foreign_products_id_sequence_function: :environment do
+      execute_sql "
+        CREATE OR REPLACE FUNCTION legacy_products_id_seq_nextval()
+          RETURNS bigint AS
+        $$
+          SELECT next_id FROM foreign_products_id_seq;
+        $$
+        LANGUAGE 'sql';
+      "
+    end
+
+    task drop_foreign_products_id_sequence_function: :environment do
+      execute_sql "DROP FUNCTION legacy_products_id_seq_nextval();"
+    end
+  end
+
+  namespace :legacy_products do
     task create_foreign_table: :environment do
       execute_sql "
         CREATE FOREIGN TABLE legacy_products (
@@ -33,6 +68,10 @@ namespace :db_connection do
           ) server legacy
         OPTIONS (table_name 'products');
       "
+    end
+
+    task drop_foreign_table: :environment do
+      execute_sql "DROP FOREIGN TABLE legacy_products;"
     end
   end
 
@@ -73,6 +112,7 @@ namespace :db_connection do
             clock_timestamp(),
             clock_timestamp()
           );
+          PERFORM legacy_products_id_seq_nextval();
           RETURN NEW;
         EXCEPTION
           WHEN undefined_table THEN
@@ -129,7 +169,10 @@ namespace :db_connection do
   end
 
   task create: :environment do
+    Rake::Task["db_connection:products_sequence:create_products_id_seq_view"].execute
     Rake::Task["db_connection:remote_server:create"].execute
+    Rake::Task["db_connection:legacy_products_sequence:create_foreign_products_id_sequence"].execute
+    Rake::Task["db_connection:legacy_products_sequence:create_or_update_foreign_products_id_sequence_function"].execute
     Rake::Task["db_connection:legacy_products:create_foreign_table"].execute
     Rake::Task["db_connection:legacy_products:create_or_update_insert_function"].execute
     Rake::Task["db_connection:legacy_products:create_or_update_update_function"].execute
@@ -143,7 +186,10 @@ namespace :db_connection do
     Rake::Task["db_connection:legacy_products:drop_update_function"].execute
     Rake::Task["db_connection:legacy_products:drop_insert_function"].execute
     Rake::Task["db_connection:legacy_products:drop_foreign_table"].execute
+    Rake::Task["db_connection:legacy_products_sequence:drop_foreign_products_id_sequence"].execute
+    Rake::Task["db_connection:legacy_products_sequence:drop_foreign_products_id_sequence_function"].execute
     Rake::Task["db_connection:remote_server:destroy"].execute
+    Rake::Task["db_connection:products_sequence:drop_products_id_seq_view"].execute
   end
 
   private
