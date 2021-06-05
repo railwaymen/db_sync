@@ -1,0 +1,26 @@
+<h1>Products comparison</h1>
+
+<div style="width: 50%; float: left">
+  <h3>Legacy products</h3>
+  <table>
+    <tr>
+      <th>ID</th>
+      <th>Name</th>
+      <th>Price</th>
+      <th>Updated at</th>
+    </tr>
+    <%= render partial: "product", collection: @legacy_products %>
+  </table>
+</div>
+<div style="width: 50%; float: left">
+  <h3>New products</h3>
+  <table>
+    <tr>
+      <th>ID</th>
+      <th>Name</th>
+      <th>Price</th>
+      <th>Updated at</th>
+    </tr>
+    <%= render partial: "product", collection: @new_products %>
+  </table>
+</div>

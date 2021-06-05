@@ -1,1 +1,11 @@
-<h1>Product list</h1>
+<h1>Products list</h1>
+
+<table>
+  <tr>
+    <th>ID</th>
+    <th>Name</th>
+    <th>Price</th>
+    <th>Updated at</th>
+  </tr>
+  <%= render partial: "product", collection: @products %>
+</table>

@@ -11,6 +11,13 @@
 
   <body>
     <h1>New app</h1>
+    <nav>
+      <%= link_to 'Products list', products_path %> |
+      <%= link_to 'New product', new_product_path %> |
+      <%= link_to 'Products comparison', comparison_products_path %>
+    </nav>
+
     <%= yield %>
+
   </body>
 </html>
