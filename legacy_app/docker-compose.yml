@@ -18,11 +18,11 @@ services:
     depends_on:
       - legacy_db
     environment:
-      LEGACY_DATABASE_HOST: legacy_app_db
-      LEGACY_DATABASE_PORT: 5433
-      LEGACY_DATABASE: legacy_app_development
-      LEGACY_DATABASE_USER: postgres
-      LEGACY_DATABASE_PASSWORD: password
+      NEW_DATABASE_HOST: new_app_db
+      NEW_DATABASE_PORT: 5432
+      NEW_DATABASE: new_app_development
+      NEW_DATABASE_USER: postgres
+      NEW_DATABASE_PASSWORD: password
 
 networks:
   default:
