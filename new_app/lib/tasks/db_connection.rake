@@ -90,7 +90,7 @@ namespace :db_connection do
     task create_update_trigger: :environment do
       execute_sql "
         CREATE TRIGGER AfterProductsUpdate
-        AFTER INSERT
+        AFTER UPDATE
           ON products
           FOR EACH ROW
           EXECUTE PROCEDURE update_legacy_products();

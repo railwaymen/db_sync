@@ -88,10 +88,10 @@ namespace :db_connection do
     task create_update_trigger: :environment do
       execute_sql "
         CREATE TRIGGER AfterProductsUpdate
-        AFTER INSERT
+        AFTER UPDATE
           ON products
           FOR EACH ROW
-          EXECUTE PROCEDURE insert_new_products();
+          EXECUTE PROCEDURE update_new_products();
       "
     end
 
