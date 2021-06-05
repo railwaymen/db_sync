@@ -17,6 +17,12 @@ services:
       - .:/usr/src/app
     depends_on:
       - new_db
+    environment:
+      LEGACY_DATABASE_HOST: legacy_app_db
+      LEGACY_DATABASE_PORT: 5432
+      LEGACY_DATABASE: legacy_app_development
+      LEGACY_DATABASE_USER: postgres
+      LEGACY_DATABASE_PASSWORD: password
 
 networks:
   default:
