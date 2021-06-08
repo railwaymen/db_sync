@@ -1,20 +1,22 @@
 # db_sync
 
-In new_app:
-docker-compose up --build
-docker-compose run --rm app bundle exec rake db:create db:migrate #TODO db:seed
+### Setup
 
-In legacy_app
-docker-compose up --build
-docker-compose run --rm app bundle exec rake db:create db:migrate #TODO db:seed
+To run example applications, install docekr, clone the repository and do the following steps:
 
-In new_app:
-docker-compose run --rm app bundle exec rake db_connection:remote_server:create
-docker-compose run --rm app bundle exec rake db_connection:legacy_products:create_foreign_table
+In /new_app path:
+- docker-compose up --build
+- docker-compose run --rm app bundle exec rake db:create db:migrate
+- docker-compose run --rm app bundle exec rake db_connection:create
 
-docker-compose run --rm app bundle exec rails db
+new_app will be accessible on localhost:3000
 
-#TODO:
-\l and look for remote database
-\d and look for legacy_products table
-select * from legacy_products;
+In /legacy_app path:
+- docker-compose up --build
+- docker-compose run --rm app bundle exec rake db:create db:migrate
+- docker-compose run --rm app bundle exec rake db_connection:create
+
+legacy_app will be accessible on localhost:3001
+
+To remove connection:
+- docker-compose run --rm app bundle exec rake db_connection:destroy 
